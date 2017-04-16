@@ -1,0 +1,50 @@
+--Version 3.4.1--
+~~ Noticed version file is getting to long and is messing with client dimensions
+~~ Noticed client breaks if there is no internet and no cache
+~ Fixed client not running from media player error
+~ Fixed calling Info Tab the dungtab
+
+--Version 3.4--
+~ Got rid of all unused methods, variables, and classes to make the client even smaller
+~ Got a song to play as the client starts up
+~ Songs can be played in the background just haven’t set it up yet, if you have any suggestions
+on what to do tell me on the forum
+~ Got the full screen thing to partially work again
+
+[NOTE] How to get the full screen to work on tabbed with a menu bar of just menu bar mode 
+you have to start up the client log into the server, put the client into full screen, then 
+click on the full screen button in the menu bar. This will get you into full screen, but
+you can't get out of it unless you restart the client.
+
+--Version 3.3--
+~ Half fixed the full screen problem then broke it again
+~ Made the client smaller by shortening and getting rid of unused code
+
+--Version 3.2--
+~ Tool bar has been cleaned up and doesn’t have my debugging stuff in it
+~ If you have a suggestion to add the tool bar tell me on the forums
+~ Added a splash to show up before the client opens
+
+--Version 3.1--
+~ Added feature to switch between all modes of client
+~ The new modes are still a WIP
+~ Still working on music, I need suggestions on what music to include
+
+[NOTE] To change between the different Client modes change the second word after Gui
+to either Tabbed, ToolBar, Both, or None for the original. Also right now Full screen
+only works in the original version. The last way to change it will not work on this 
+version.
+
+--Version 3.0--
+~ Created new tabs System, by default they are disabled
+~ Playing your own music will soon be added
+~ Menu tab has been put in with the tab system, i will change this soon
+~ ADDED Object ID's
+~ ADDED Screenshot button in tabs system
+
+[NOTE] To change into Tabbed mode edit the "Run Client.bat" and change the java line to
+this "java -Xmx500m -cp .;Theme.jar Gui tabbed" without the quotes 
+
+--Version 2.3--
+~ ADDED Menu Tabs
+~ ADDED World Map and Item List
