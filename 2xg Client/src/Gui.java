@@ -1,3 +1,5 @@
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.imageio.ImageIO;
 import javax.sound.midi.InvalidMidiDataException;
@@ -54,11 +58,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.OceanTheme;
 
 import sign.signlink;
 import theme.BlackTheme;
@@ -460,6 +460,7 @@ public class Gui extends client implements ActionListener, MouseListener,
 	
 				case "Original":
 					setCursor("images/Cursors/standard.png", "normal");
+					break;
 				case "Scimitar":
 				case "Longsword":
 				case "Twohander":
@@ -479,9 +480,25 @@ public class Gui extends client implements ActionListener, MouseListener,
 				case "pause":
 					musicPlayer("Stop", null, null);
 					break;
+					
+				case "Display Classes":
+					List<String> classes = null;
+					try {
+						classes = utils.getClassInJar("./theme/Theme.jar", "org.jvnet.substance.skin");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					for(String s : classes){
+						if(s.contains("LookAndFeel")){
+							String cleanedLAF = s.substring(s.lastIndexOf(".") + 1, s.length()).replace("Substance", "").replace("LookAndFeel", "").replaceAll("(.)([A-Z])", "$1 $2");
+							System.out.println(cleanedLAF);
+						}
+					}
+					break;
 	
 				default:
-					System.out.println("[ERROR] You clicked on: " + cmd + " which doesn't have a case!");
+					testForThemeButtons(cmd);
+					System.out.println("[ERROR] You clicked on: " + cmd);
 					break;
 			}
 		}
@@ -489,9 +506,9 @@ public class Gui extends client implements ActionListener, MouseListener,
 
 	public void changeTheme(String theme){
 		try {
-		//	UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceEmeraldDuskLookAndFeel");
-			MetalLookAndFeel.setCurrentTheme(new BlackTheme());
-			UIManager.setLookAndFeel(new MetalLookAndFeel());
+			UIManager.setLookAndFeel(theme);
+//			MetalLookAndFeel.setCurrentTheme(new BlackTheme());
+//			UIManager.setLookAndFeel(new MetalLookAndFeel());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -499,7 +516,59 @@ public class Gui extends client implements ActionListener, MouseListener,
 	        SwingUtilities.updateComponentTreeUI(window);
 	    }
 	}
+
+	/**
+	 * This method gets all of the themes in the jar file at path and in the package packagePre.
+	 * 
+	 * @param path This is the path to the jar file to be searched
+	 * @param packagePre This is the package you want class files to be listed from
+	 * @return <strong>classNames</strong> Contains all the class files in the package chosen
+	 * @throws IOException
+	 */
+	private String[] getThemes(String path, String packagePre){
+		List<String> classes = null;
+		try {
+			classes = utils.getClassInJar(path, packagePre);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ListIterator<String> classIter = classes.listIterator();
+		while(classIter.hasNext()){
+			String currentS = classIter.next();
+			if(currentS.contains("LookAndFeel")){
+				String cleanedLAF = currentS
+						.substring(currentS.lastIndexOf(".") + 1, currentS.length())
+						.replace("Substance", "").replace("LookAndFeel", "").replaceAll("(.)([A-Z])", "$1 $2");
+				classIter.set(cleanedLAF);
+//				System.out.println(cleanedLAF);
+			}else{
+				classIter.remove();
+			}
+		}
+		
+		String[] result = new String[classes.size()];
+		int i = 0;
+		for(String s : classes){
+			result[i] = s;
+			i++;
+		}
+		return result;
+	}
 	
+	private void testForThemeButtons(String button){
+		String themeLocation = "org.jvnet.substance.skin";
+		String[] themes = getThemes("./theme/Theme.jar", themeLocation);
+		for(int i = 0; i < themes.length; i++){
+			if(themes[i].equals(button)){
+				changeTheme(themeLocation + ".Substance" + button.replace(" ", "") + "LookAndFeel");
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * Centers the applet in the center of the center
+	 */
 	private void centerWindow() {
 		toolkit = Toolkit.getDefaultToolkit();
 		screenSize = toolkit.getScreenSize();
@@ -511,10 +580,10 @@ public class Gui extends client implements ActionListener, MouseListener,
 	private JMenuBar addMenuBar(JMenuBar menuBar) {
 		menuBar.add(createButtonTab("File", new String[] { "Open File",
 				"Save Screenshot", "-", "Vote", "Donate", "Forums", "-",
-				"Item List", "World Map", "-", "Exit" }));
-// 		menuBar.add(createButtonTab("Test", new String[] {"World Map"}));
-//		menuBar.add(createButtonTab("Themes", utils.getLookandFeelNames(utils.listInstalledLaFs())));
-		menuBar.add(createButtonTab("Themes", new String[] { "Blue", "Black/White", "Green", "Red", "White", "Grey", "Dark Grey" }));
+				"Item List", "World Map", "Object IDs", "-", "Exit" }));
+ 		menuBar.add(createButtonTab("Test", new String[] {"Display Classes"}));
+//		menuBar.add(createButtonTab("Themes", new String[] { "Blue", "Black/White", "Green", "Red", "White", "Grey", "Dark Grey" }));
+		menuBar.add(createButtonTab("Themes", getThemes("./theme/Theme.jar", "org.jvnet.substance.skin")));
 		menuBar.add(createButtonTab("Cursor", new String[] { "Scimitar",
 				"Longsword", "Twohander", "Halberd", "Warspear", "Godsword",
 				"Granite Maul", "Sword", "Original", "Guitar", "Kenny",

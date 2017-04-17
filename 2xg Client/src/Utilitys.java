@@ -1,9 +1,14 @@
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -14,6 +19,29 @@ import javax.swing.UIManager.LookAndFeelInfo;
  */
 public class Utilitys {
 
+	/**
+	 * This method searches a jar file in the chosen package location for class file to be added to a List.
+	 * 
+	 * @param path This is the path to the jar file to be searched
+	 * @param packagePre This is the package you want class files to be listed from
+	 * @return <strong>classNames</strong> Contains all the class files in the package chosen
+	 * @throws IOException
+	 */
+	public List<String> getClassInJar(String path, String packagePre) throws IOException{
+		List<String> classNames = new ArrayList<String>();
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(path));
+		for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+		    if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$") && entry.getName().replace('/', '.').startsWith(packagePre)) {
+		        // This ZipEntry represents a class. Now, what class does it represent?
+		        String className = entry.getName().replace('/', '.'); // including ".class"
+		        classNames.add(className.substring(0, className.length() - ".class".length()));
+//		        System.out.println(className.substring(0, className.length() - ".class".length()));
+		    }
+		}
+		zip.close();
+		return classNames;
+	}
+	
 	/**
 	 * @param laf
 	 * @return
