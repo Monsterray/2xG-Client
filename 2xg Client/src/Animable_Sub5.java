@@ -13,7 +13,7 @@ final class Animable_Sub5 extends Animable {
 	private final int anInt1606;
 	private Animation aAnimation_1607;
 	private int anInt1608;
-	public static client clientInstance;
+	public static Client clientInstance;
 	private final int anInt1610;
 	private final int anInt1611;
 	private final int anInt1612;
@@ -30,7 +30,7 @@ final class Animable_Sub5 extends Animable {
 		if (l1 != -1) {
 			aAnimation_1607 = Animation.anims[l1];
 			anInt1599 = 0;
-			anInt1608 = client.loopCycle;
+			anInt1608 = Client.loopCycle;
 			if (flag && aAnimation_1607.anInt356 != -1) {
 				anInt1599 = (int) (Math.random() * aAnimation_1607.anInt352);
 				anInt1608 -= (int) (Math.random() * aAnimation_1607
@@ -47,7 +47,7 @@ final class Animable_Sub5 extends Animable {
 	public Model getRotatedModel() {
 		int j = -1;
 		if (aAnimation_1607 != null) {
-			int k = client.loopCycle - anInt1608;
+			int k = Client.loopCycle - anInt1608;
 			if (k > 100 && aAnimation_1607.anInt356 > 0) {
 				k = 100;
 			}
@@ -67,7 +67,7 @@ final class Animable_Sub5 extends Animable {
 				aAnimation_1607 = null;
 				break;
 			} while (true);
-			anInt1608 = client.loopCycle - k;
+			anInt1608 = Client.loopCycle - k;
 			if (aAnimation_1607 != null) {
 				j = aAnimation_1607.anIntArray353[anInt1599];
 			}
@@ -93,7 +93,7 @@ final class Animable_Sub5 extends Animable {
 			int k = varBit.anInt648;
 			int l = varBit.anInt649;
 			int i1 = varBit.anInt650;
-			int j1 = client.anIntArray1232[i1 - l];
+			int j1 = Client.anIntArray1232[i1 - l];
 			i = clientInstance.variousSettings[k] >> l & j1;
 		} else if (anInt1602 != -1) {
 			i = clientInstance.variousSettings[anInt1602];

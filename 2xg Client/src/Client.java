@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
 
 import sign.signlink;
 
-public class client extends RSApplet {
+public class Client extends RSApplet {
 
 	private static final long serialVersionUID = 6036919741453107032L;
 	public RSFont newSmallFont;
@@ -56,16 +56,14 @@ public class client extends RSApplet {
 	public static Gui guiInstance;
 	
 	public static void main(String args[]) {
-		for(int i = 0; i <= args.length-1; i++)
-			System.out.println("args["+ i +"]: "+ args[i]);
 		try {
-			nodeID = 10;//friends list order
+			nodeID = 10;	//friends list order
 			portOff = 0;
-			setHighMem();//sets high or low detail
+			setMemLevel(false);	//Sets high or low detail
 			isMembers = true;
 			signlink.storeid = 32;
 			signlink.startpriv(InetAddress.getLocalHost());
-			instance = new client();
+			instance = new Client();
 			if(args.length > 1){
 				System.out.println("You are in GUI Debuging mode!");
 			}else{
@@ -80,9 +78,61 @@ public class client extends RSApplet {
 			System.out.println("main Error");
 		}
 	}
-	
-	public client(){
-		findCaller();
+
+	@Override
+	public void init(){  //third thing called
+		try {
+			System.out.println("[INFO] Started init()");
+			nodeID = 10; //friends list order
+			portOff = 0; //Adds this amount to the port
+			setMemLevel(false);	//Sets high or low detail
+			isMembers = true;	//Actually is for members stuff
+			signlink.storeid = 32;	//Initializes this variable
+			signlink.startpriv(InetAddress.getLocalHost()); //just initializes the signlink stuff
+			//instance = this;
+			//signlink.mainapp = (RSApplet)instance;
+			int heighter = getScreenHeight(432);
+			int widther = getScreenWidth(8765);
+			System.out.println("Height, Width: "+ heighter +", "+ widther);
+			initClientFrame(heighter, widther); //Doesn't matter what size you put here it gets changed somewhere else //was 503, 765
+			System.out.println("[INFO] Got to the end of init");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("[FAILED] init error");
+		}
+	}
+
+	public static void theClient(String[] args){
+		for(int i = 0; i <= args.length-1; i++)
+			System.out.println("[INFO] args["+ i +"]: "+ args[i]);
+		try {
+			nodeID = 10; //friends list order
+			portOff = 0; //Adds this amount to the port
+			setMemLevel(false);	//Sets high or low detail
+			isMembers = true; //actualy is for members stuff
+			signlink.storeid = 32; //initilizes this variable
+			signlink.startpriv(InetAddress.getLocalHost()); //just initilizes the signlink stuff
+
+			instance = new Client(); //initilize all of the variables, and the world selector
+			if(args[0].equalsIgnoreCase("GUI_DEBUG")){ //For if the person is debuging a new featre
+				System.out.println("You are in GUI Debuging mode!"); //just says your in GUI_DEBUG Mode
+			}else{
+				if(args[1].equalsIgnoreCase("tabbed") || args[1].equalsIgnoreCase("ToolBar") || args[1].equalsIgnoreCase("Both")){
+					guiInstance = new Gui(args); //creates my gui class if the user is trying my menu bar or tab features
+				}else{
+					//Doesn't matter what size you put here it gets changed somewhere else
+					//Client frame size, as well as does other things
+					instance.createClientFrame(503, 765); 
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("[FAILED] theClient Error");
+		}
+	}
+
+	public Client(){
+		Utilitys.findCaller();
 		System.out.println("~~~~~~~~~~~~Client Initilized~~~~~~~~~~~~~~~");
 		alertHandler = new AlertHandler(this);
 		inventoryStones = new Sprite[3];
@@ -276,82 +326,16 @@ public class client extends RSApplet {
 		//System.out.println("~~~~~~~~~~~~END Client Initilization~~~~~~~~~~~~~~~");
 	}
 	
-	public static void theClient(String[] args, Gui isint){
-		for(int i = 0; i <= args.length-1; i++)
-			System.out.println("[INFO] args["+ i +"]: "+ args[i]);
-		try {
-			nodeID = 10; //friends list order
-			portOff = 0; //Adds this amount to the port
-			setHighMem();//sets high or low detail
-			isMembers = true; //actualy is for members stuff
-			signlink.storeid = 32; //initilizes this variable
-			signlink.startpriv(InetAddress.getLocalHost()); //just initilizes the signlink stuff
-			//Thread.sleep(10000);
-			instance = new client(); //initilize all of the variables, and the world selector
-			if(args[0].equalsIgnoreCase("GUI_DEBUG")){ //For if the person is debuging a new featre
-				System.out.println("You are in GUI Debuging mode!"); //just says your in GUI_DEBUG Mode
-			}else{
-				if(args[1].equalsIgnoreCase("tabbed") || args[1].equalsIgnoreCase("ToolBar") || args[1].equalsIgnoreCase("Both")){
-					guiInstance = new Gui(args); //creates my gui class if the user is trying my menu bar or tab features
-				}else{
-					instance.createClientFrame(503, 765); //client frame size, as well as does other things
-				}
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			System.out.println("[FAILED] main Error");
-		}
+	private static void setMemLevel(boolean highMem) {	// This is false if the client wants to be in high memory mode
+		WorldController.lowMem = highMem;
+		Texture.lowMem = highMem;
+		lowMem = highMem;
+		ObjectManager.lowMem = highMem;
+		ObjectDef.lowMem = highMem;
 	}
 	
-	public void findCaller(){
-		Throwable t = new Throwable(); 
-		StackTraceElement[] elements = t.getStackTrace();
-		String[] arrayS = Utilitys.exceptionToString(elements);
-		arrayS[0] = elements[1].getMethodName();
-		Utilitys.saveStack(arrayS, "debug");
-	} 
-	
-	@Override
-	public void init(){  //third thing called
-		try {
-			System.out.println("[INFO] Started init()");
-			nodeID = 10; //friends list order
-			portOff = 0; //Adds this amount to the port
-			setHighMem();//sets high or low detail
-			isMembers = true; //actualy is for members stuff
-			signlink.storeid = 32; //initilizes this variable
-			signlink.startpriv(InetAddress.getLocalHost()); //just initilizes the signlink stuff
-			//instance = this;
-			//signlink.mainapp = (RSApplet)instance;
-			int heighter = getScreenHeight(432);
-			int widther = getScreenWidth(8765);
-			System.out.println("Height, Width: "+ heighter +", "+ widther);
-			initClientFrame(heighter, widther); //doesnt matter what size you put here it gets changed somewhere else //was 503, 765
-			System.out.println("[INFO] Got to the end of init");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("[FAILED] init error");
-		}
-	}
-
-	private static void setHighMem() {
-		WorldController.lowMem = false;
-		Texture.lowMem = false;
-		lowMem = false;
-		ObjectManager.lowMem = false;
-		ObjectDef.lowMem = false;
-	}
-	
-	/*private static void setLowMem(){
-		WorldController.lowMem = true;
-		Texture.lowMem = true;
-		lowMem = true;
-		ObjectManager.lowMem = true;
-		ObjectDef.lowMem = true;
-	}*/
-
 	public void handleStupidWorldSwitch() {
-		if(world > 3){ //STOPS MORE THAN 4 WORLD
+		if(world > 3){	//STOPS MORE THAN 4 WORLD
 			world = 1;
 		}else{
 			world += 1;
@@ -412,7 +396,7 @@ public class client extends RSApplet {
 	
 	@SuppressWarnings("static-access")
 	public void recreateClientFrame(boolean undecorative, int width, int height, boolean resizable, int displayMode, boolean toggle) { //second hit is this for fullscreen
-		findCaller();
+		Utilitys.findCaller();
 		System.out.println("[DEBUG] recreateClientFrame() ");
 		main3DAreaWidth = (displayMode == 1) ? 512 : instance.getScreenWidth();
 		main3DAreaHeight = (displayMode == 1) ? 334 : instance.getScreenHeight();
@@ -425,7 +409,7 @@ public class client extends RSApplet {
 	}
 	
 	protected void load3DArea() { //third hit is this for fullscreen
-		findCaller();
+		Utilitys.findCaller();
 		System.out.println("[DEBUG] load3DArea() ");
 		Texture.method365(getScreenWidth(), getScreenHeight());
 		fullScreenTextureArray = Texture.anIntArray1472;
@@ -447,7 +431,7 @@ public class client extends RSApplet {
 	
 	@Override
 	protected Component getGameComponent() {
-		findCaller();
+		Utilitys.findCaller();
 		if(signlink.mainapp != null){
 			System.out.println("[INFO] Useing signlink.mainapp");
 			return signlink.mainapp;
@@ -889,40 +873,35 @@ public class client extends RSApplet {
 	}
 	
 	public static int getChatBackIncreaseY() {
-		return chatIncreaseY = toggleFullscreen ? (getScreenHeight() - 503) : 0;
+		return toggleFullscreen ? (getScreenHeight() - 503) : 0;
 	}
 	
 	private int getMapIncreaseX() {
-		return mapIncreaseX = toggleFullscreen ? (getScreenWidth() - 765 + 52) : 0;
+		return toggleFullscreen ? (getScreenWidth() - 765 + 52) : 0;
 	}
 	
 	private int getMapIncreaseY() {
-		return mapIncreaseY = toggleFullscreen ? 4 : 0;
+		return toggleFullscreen ? 4 : 0;
 	}
 	
 	private int getTabIncreaseX() {
-		return tabIncreaseX = toggleFullscreen ? (getScreenWidth() - 765) : 0;
+		return toggleFullscreen ? (getScreenWidth() - 765) : 0;
 	}
 	
 	private int getTabIncreaseY() {
-		return tabIncreaseY = toggleFullscreen ? (getScreenHeight() - 503) : 0;
+		return toggleFullscreen ? (getScreenHeight() - 503) : 0;
 	}
 	
 	private int yPaddingchatBackImage = 338, xPaddingchatBackImage = 0;
 	private int yPaddingmapBackImage = 0, xPaddingmapBackImage = 516;
 	private int xPaddingtabBack = 519, yPaddingtabBack = 168;
-	@SuppressWarnings("unused")
-	private int mapIncreaseY = 0, mapIncreaseX = 0;
-	public static int chatIncreaseY = 0, chatIncreaseX = 0;
-	@SuppressWarnings("unused")
-	private int tabIncreaseY = 0, tabIncreaseX = 0;
 	public static boolean toggleFullscreen;
 	private static Toolkit toolkit;
 	private static Dimension screenSize;
 	//private static int screenWidth;
 	//private static int screenHeight;
 	protected int main3DAreaWidth = 512, main3DAreaHeight = 334;
-	public static client instance;
+	public static Client instance;
 	//
 	
 	public Sprite magicAuto;

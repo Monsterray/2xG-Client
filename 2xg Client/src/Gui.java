@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -58,28 +59,26 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import sign.signlink;
-import theme.BlackTheme;
 
-public class Gui extends client implements ActionListener, MouseListener,
+public class Gui extends Client implements ActionListener, MouseListener,
 		MouseMotionListener, KeyListener, FocusListener, WindowListener,
 		MouseWheelListener {
 	private static final long serialVersionUID = 7411442203970959046L;
 
 	public static void main(String[] args) { // first thing called
 		System.out.println("GUI.main called");
-		System.out.println(System.getProperty("java.class.path"));
+//		System.out.println(System.getProperty("java.class.path"));
 		if (args[0].equalsIgnoreCase("mid player")) {
 			new Gui("debug");
 		}
-		theArgs = args;
 		if (!args[1].equalsIgnoreCase("gui")) {
 			new Gui(args);
 //			theClient(theArgs, new Gui());
 		} else {
-			theClient(theArgs, new Gui());
+			theClient(args);
 		}
 	}
 
@@ -94,25 +93,34 @@ public class Gui extends client implements ActionListener, MouseListener,
 	}
 
 	public Gui(String args[]) { // second thing called
+		List<String> argList = Arrays.asList(args);
 		System.out.println("GUI initilizer called");
-		drawToolbar = theArgs[2].equalsIgnoreCase("ToolBar") || theArgs[2].equalsIgnoreCase("Both");
-		drawTabs = theArgs[2].equalsIgnoreCase("Tabbed") || theArgs[2].equalsIgnoreCase("Both");
-		
-		musicPlayer("play", signlink.findcachedir() + "Mp3/Music/", "jingle1.mid");
+		drawToolbar = argList.contains("-toolbar") || argList.contains("-both");
+		drawTabs = argList.contains("-tabbed") || argList.contains("-both");
+		if(!argList.contains("-musicoff"))
+			musicPlayer("play", signlink.findcachedir() + "Mp3/Music/", "jingle1.mid");
 		instance = this;
-		MetalLookAndFeel.setCurrentTheme(new BlackTheme());
+		try {
+			UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceEmeraldDuskLookAndFeel");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			e1.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			tab = new JTabbedPane();
 			frame = new JFrame(frameTitle);
-			// UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceMagmaLookAndFeel");
 			setCornerIcon("images/advisor 0.png");
 			setCursor("images/Cursors/standard.png", "normal");
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			try {
 				sign.signlink.startpriv(InetAddress.getLocalHost()); // WAS:
 																		// sign.signlink.startpriv(InetAddress.getByName(serverip));
 			} catch (Exception e) {
-				System.out.println("[Error] Address Error");
+				System.out.println("[Error] SignLink Address Error");
 				e.printStackTrace();
 			}
 			initUI();
@@ -226,7 +234,6 @@ public class Gui extends client implements ActionListener, MouseListener,
 	public int midiCount;
 	public Sequencer sequencer;
 	
-	private static String[] theArgs;
 	boolean drawToolbar;
 	public String frameTitle = "2xG V3.4 || By Monsterray";
 	public static String frameSTitle = "2xG V3.4 || By Monsterray";

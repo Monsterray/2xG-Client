@@ -197,8 +197,8 @@ public class Entity extends Animable {
 				hitmarkMove[i1] = 5;
 				hitmarkTrans[i1] = 230;
 				hitMarkDamage[i1] = damage
-						* (!client.newDamage || damage <= 0 ? 1 : 10);
-				if (client.newDamage && damage > 0) {
+						* (!Client.newDamage || damage <= 0 ? 1 : 10);
+				if (Client.newDamage && damage > 0) {
 					hitMarkDamage[i1] += (new Random()).nextInt(9);
 				}
 				hitMarkTypes[i1] = markType;

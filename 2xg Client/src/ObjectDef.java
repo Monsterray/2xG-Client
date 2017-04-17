@@ -235,7 +235,7 @@ public final class ObjectDef {
 	public int anInt761;
 	public boolean aBoolean762;
 	public boolean aBoolean764;
-	public static client clientInstance;
+	public static Client clientInstance;
 	public boolean aBoolean766;
 	public boolean aBoolean767;
 	public int anInt768;
@@ -334,7 +334,7 @@ public final class ObjectDef {
 			int j = varBit.anInt648;
 			int k = varBit.anInt649;
 			int l = varBit.anInt650;
-			int i1 = client.anIntArray1232[l - k];
+			int i1 = Client.anIntArray1232[l - k];
 			i = clientInstance.variousSettings[j] >> k & i1;
 		} else if (anInt749 != -1) {
 			i = clientInstance.variousSettings[anInt749];

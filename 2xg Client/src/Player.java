@@ -89,10 +89,10 @@ public final class Player extends Entity {
 			}
 		}
 		if (aModel_1714 != null) {
-			if (client.loopCycle >= anInt1708) {
+			if (Client.loopCycle >= anInt1708) {
 				aModel_1714 = null;
 			}
-			if (client.loopCycle >= anInt1707 && client.loopCycle < anInt1708) {
+			if (Client.loopCycle >= anInt1707 && Client.loopCycle < anInt1708) {
 				Model model_1 = aModel_1714;
 				model_1.method475(anInt1711 - super.x, anInt1712 - anInt1709,
 						anInt1713 - super.y);
@@ -225,11 +225,11 @@ public final class Player extends Entity {
 				if (anIntArray1700[j3] == 0) {
 					continue;
 				}
-				model_1.method476(client.anIntArrayArray1003[j3][0],
-						client.anIntArrayArray1003[j3][anIntArray1700[j3]]);
+				model_1.method476(Client.anIntArrayArray1003[j3][0],
+						Client.anIntArrayArray1003[j3][anIntArray1700[j3]]);
 				if (j3 == 1) {
-					model_1.method476(client.anIntArray1204[0],
-							client.anIntArray1204[anIntArray1700[j3]]);
+					model_1.method476(Client.anIntArray1204[0],
+							Client.anIntArray1204[anIntArray1700[j3]]);
 				}
 			}
 			model_1.method469();
@@ -305,11 +305,11 @@ public final class Player extends Entity {
 			if (anIntArray1700[j1] == 0) {
 				continue;
 			}
-			model.method476(client.anIntArrayArray1003[j1][0],
-					client.anIntArrayArray1003[j1][anIntArray1700[j1]]);
+			model.method476(Client.anIntArrayArray1003[j1][0],
+					Client.anIntArrayArray1003[j1][anIntArray1700[j1]]);
 			if (j1 == 1) {
-				model.method476(client.anIntArray1204[0],
-						client.anIntArray1204[anIntArray1700[j1]]);
+				model.method476(Client.anIntArray1204[0],
+						Client.anIntArray1204[anIntArray1700[j1]]);
 			}
 		}
 		return model;
@@ -342,7 +342,7 @@ public final class Player extends Entity {
 		}
 		for (int l = 0; l < 5; l++) {
 			int j1 = stream.readUnsignedByte();
-			if (j1 < 0 || j1 >= client.anIntArrayArray1003[l].length) {
+			if (j1 < 0 || j1 >= Client.anIntArrayArray1003[l].length) {
 				j1 = 0;
 			}
 			anIntArray1700[l] = j1;

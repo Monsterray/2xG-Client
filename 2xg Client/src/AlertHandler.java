@@ -5,9 +5,9 @@ public class AlertHandler {
 	public boolean show = false;
 	public boolean remove = false;
 	public Alert alert = null;
-	public client c;
+	public Client c;
 
-	public AlertHandler(client c) {
+	public AlertHandler(Client c) {
 		this.c = c;
 	}
 

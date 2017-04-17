@@ -7080,7 +7080,7 @@ public final class RSInterface {
 			model = EntityDef.forID(j).method160();
 		}
 		if (i == 3) {
-			model = client.myPlayer.method453();
+			model = Client.myPlayer.method453();
 		}
 		if (i == 4) {
 			model = ItemDef.forID(j).method202(50);

@@ -579,7 +579,7 @@ public final class EntityDef {
 	public long type;
 	public int anInt79;
 	public static EntityDef cache[];
-	public static client clientInstance;
+	public static Client clientInstance;
 	public int anInt83;
 	public boolean aBoolean84;
 	public int anInt85;
@@ -663,7 +663,7 @@ public final class EntityDef {
 				int k = varBit.anInt648;
 				int l = varBit.anInt649;
 				int i1 = varBit.anInt650;
-				int j1 = client.anIntArray1232[i1 - l];
+				int j1 = Client.anIntArray1232[i1 - l];
 				j = clientInstance.variousSettings[k] >> l & j1;
 			} else if (anInt59 != -1) {
 				j = clientInstance.variousSettings[anInt59];

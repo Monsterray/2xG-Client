@@ -118,8 +118,7 @@ public class RSApplet extends Applet implements Runnable, MouseListener,
 		myHeight = Height;
 		gameFrame = new RSFrame(this, myWidth, myHeight);
 		graphics = getGameComponent().getGraphics();
-		fullGameScreen = new RSImageProducer(myWidth, myHeight,
-				getGameComponent());
+		fullGameScreen = new RSImageProducer(myWidth, myHeight, getGameComponent());
 		startRunnable(this, 1);
 	}
 
@@ -239,8 +238,8 @@ public class RSApplet extends Applet implements Runnable, MouseListener,
 		if (i == 68) {
 			if (KeyEvent.getKeyModifiersText(keyevent.getModifiers()).contains(
 					"Ctrl")) {
-				client.newDamage = !client.newDamage;
-				if (client.newDamage) {
+				Client.newDamage = !Client.newDamage;
+				if (Client.newDamage) {
 					JOptionPane
 							.showMessageDialog(
 									null,
@@ -256,73 +255,73 @@ public class RSApplet extends Applet implements Runnable, MouseListener,
 			}
 		}
 		if (hotKey == 508) {
-			if (client.functionKeys) {
+			if (Client.functionKeys) {
 				if (i == 27) {
-					client.setTab(3);
+					Client.setTab(3);
 				} else if (i == 112) {
-					client.setTab(0);
+					Client.setTab(0);
 				} else if (i == 113) {
-					client.setTab(1);
+					Client.setTab(1);
 				} else if (i == 114) {
-					client.setTab(2);
+					Client.setTab(2);
 				} else if (i == 115) {
-					client.setTab(3);
+					Client.setTab(3);
 				} else if (i == 116) {
-					client.setTab(4);
+					Client.setTab(4);
 				} else if (i == 117) {
-					client.setTab(5);
+					Client.setTab(5);
 				} else if (i == 118) {
-					client.setTab(6);
+					Client.setTab(6);
 				} else if (i == 119) {
-					client.setTab(7);
+					Client.setTab(7);
 				} else if (i == 120) {
-					client.setTab(8);
+					Client.setTab(8);
 				} else if (i == 121) {
-					client.setTab(9);
+					Client.setTab(9);
 				} else if (i == 122) {
-					client.setTab(10);
+					Client.setTab(10);
 				} else if (i == 123) {
-					client.setTab(11);
+					Client.setTab(11);
 				}
 			} else if (i == 27) {
-				client.setTab(3);
+				Client.setTab(3);
 			} else if (i == 112) {
-				client.setTab(3);
+				Client.setTab(3);
 			} else if (i == 113) {
-				client.setTab(4);
+				Client.setTab(4);
 			} else if (i == 114) {
-				client.setTab(5);
+				Client.setTab(5);
 			} else if (i == 115) {
-				client.setTab(6);
+				Client.setTab(6);
 			} else if (i == 116) {
-				client.setTab(0);
+				Client.setTab(0);
 			}
 		} else if (i == 27) {
-			client.setTab(0);
+			Client.setTab(0);
 		} else if (i == 112) {
-			client.setTab(3);
+			Client.setTab(3);
 		} else if (i == 113) {
-			client.setTab(1);
+			Client.setTab(1);
 		} else if (i == 114) {
-			client.setTab(2);
+			Client.setTab(2);
 		} else if (i == 115) {
-			client.setTab(3);
+			Client.setTab(3);
 		} else if (i == 116) {
-			client.setTab(4);
+			Client.setTab(4);
 		} else if (i == 117) {
-			client.setTab(5);
+			Client.setTab(5);
 		} else if (i == 118) {
-			client.setTab(6);
+			Client.setTab(6);
 		} else if (i == 119) {
-			client.setTab(7);
+			Client.setTab(7);
 		} else if (i == 120) {
-			client.setTab(8);
+			Client.setTab(8);
 		} else if (i == 121) {
-			client.setTab(9);
+			Client.setTab(9);
 		} else if (i == 122) {
-			client.setTab(10);
+			Client.setTab(10);
 		} else if (i == 123) {
-			client.setTab(11);
+			Client.setTab(11);
 		}
 		if (j < 30) {
 			j = 0;
@@ -500,33 +499,32 @@ public class RSApplet extends Applet implements Runnable, MouseListener,
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent event) {
 		int rotation = event.getWheelRotation();
-		if (mouseX > 0 && mouseX < 512
-				&& mouseY > 342 + client.getChatBackIncreaseY()) {
-			int i = client.anInt1089;
+		if (mouseX > 0 && mouseX < 512 && mouseY > 342 + Client.getChatBackIncreaseY()) {
+			int i = Client.anInt1089;
 			i -= rotation * 30;
 			if (i < 0) {
 				i = 0;
 			}
-			if (i > client.chatScrollTotalLength - 110) {
-				i = client.chatScrollTotalLength - 110;
+			if (i > Client.chatScrollTotalLength - 110) {
+				i = Client.chatScrollTotalLength - 110;
 			}
-			if (client.anInt1089 != i) {
-				client.anInt1089 = i;
-				client.inputTaken = true;
+			if (Client.anInt1089 != i) {
+				Client.anInt1089 = i;
+				Client.inputTaken = true;
 			}
 		}
 		if (mouseY > 210 && mouseY < 473 && mouseX > 514 && mouseX < 762
 				|| mouseX > 0 && mouseX < 512 && mouseY > 0 && mouseY < 334) {
-			if (client.tabInterfaceIDs[client.tabID] == 638) {
+			if (Client.tabInterfaceIDs[Client.tabID] == 638) {
 				RSInterface.interfaceCache[639].scrollPosition += rotation * 30;
 			}
-			if (client.openInterfaceID == 5292) {
+			if (Client.openInterfaceID == 5292) {
 				RSInterface.interfaceCache[5385].scrollPosition += rotation * 30;
 			}
-			if (client.openInterfaceID == 22760) {
+			if (Client.openInterfaceID == 22760) {
 				RSInterface.interfaceCache[22767].scrollPosition += rotation * 30;
 			}
-			if (client.openInterfaceID == 147) {
+			if (Client.openInterfaceID == 147) {
 				RSInterface.interfaceCache[148].scrollPosition += rotation * 30;
 			}
 		}

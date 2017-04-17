@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,6 +83,12 @@ public class Utilitys {
 		}
 		return lafs;
 	}
+	
+	public static void printArray(String[] toPrint){
+		for(int i = 0; i < toPrint.length; i++){
+			System.out.println(toPrint[i]);
+		}
+	}
 
 	public static String[] arrayShortener(String[] startArray, int shorter,
 			boolean append) {
@@ -100,6 +107,20 @@ public class Utilitys {
 		}
 		return output;
 	}
+	
+	/**
+	 * Prints out the methods that called the method this method is called in.
+	 */
+	public static void findCaller(){
+		Throwable t = new Throwable(); 
+		StackTraceElement[] elements = t.getStackTrace();
+		String[] arrayS = Utilitys.exceptionToString(elements);
+		arrayS[0] = elements[1].getMethodName();
+		System.out.println("~~~~~~~~Finding Caller~~~~~~~~");
+		Utilitys.printArray(arrayS);
+//		Utilitys.saveStack(arrayS, "debug");
+	} 
+	
 
 	public static String[] exceptionToString(StackTraceElement[] stack) {
 		String[] output = new String[stack.length];
@@ -110,6 +131,10 @@ public class Utilitys {
 	}
 
 	public static void saveStack(String[] stack, String type) {
+		File debugFolder = new File("./" + type + "/");
+		if(!debugFolder.exists()){
+			debugFolder.mkdirs();
+		}
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss.SSSS");
 		Date cachedDate = new Date();
 		String date = dateFormat.format(cachedDate);

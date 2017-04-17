@@ -39,7 +39,7 @@ public class CacheDownloader {
 		return delete(new File(path));
 	}
 
-	public client client;
+	public Client client;
 	public final int BUFFER = 1024;
 	public static final int VERSION = 2;
 
@@ -53,7 +53,7 @@ public class CacheDownloader {
 
 	public String fileToExtract = getCacheDir() + getArchivedName();
 
-	public CacheDownloader(client client) {
+	public CacheDownloader(Client client) {
 		this.client = client;
 	}
 

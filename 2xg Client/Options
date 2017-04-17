@@ -1,0 +1,13 @@
+Runner options are:
+
+	-nomusic
+		This makes it so that the melody that plays when the applet starts up doesn't play
+		
+	-tabbed
+		This makes it so the applet uses the tabbed view to show you things like version data and others
+		
+	-toolbar
+		Addes the toolbar to the applet
+		
+	-both
+		Makes the program runn with tabs and has the toolbar added as well

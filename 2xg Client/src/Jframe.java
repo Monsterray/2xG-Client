@@ -1,7 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Jframe extends client implements ActionListener {
+public class Jframe extends Client implements ActionListener {
 
 	/**
 	 * 
