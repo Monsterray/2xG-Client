@@ -8,7 +8,6 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -47,7 +46,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -225,7 +223,7 @@ public class Gui extends Client implements ActionListener, MouseListener,
 	// private ImageIcon info = createImageIcon("images/pfi.png");
 	// private ImageIcon lice = createImageIcon("images/licence.png");
 	private JMenuBar topMenuBar;
-	private JPanel splashPanel;
+//	private JPanel splashPanel;	// Because not useing splash method this is useless 4/17/17
 	private JPanel gamePanel;
 	// private JTextArea aboutArea = new JTextArea();
 	// private JTextArea licenceArea = new JTextArea();
@@ -237,8 +235,8 @@ public class Gui extends Client implements ActionListener, MouseListener,
 	boolean drawToolbar;
 	public String frameTitle = "2xG V3.4 || By Monsterray";
 	public static String frameSTitle = "2xG V3.4 || By Monsterray";
-	public String fileName = "splash.png";
-	private int splashDuration = 5000;
+//	public String fileName = "splash.png";	// Because not useing splash method this is useless 4/17/17
+//	private int splashDuration = 5000;	// Because not useing splash method this is useless 4/17/17
 	private Dimension appletDimensions = new Dimension(765, 503);
 	public Dimension screenSize;
 	public int screenWidth;
@@ -511,6 +509,10 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+	public String getCacheDir() {
+		return signlink.findcachedir();
+	}
+
 	public void changeTheme(String theme){
 		try {
 			UIManager.setLookAndFeel(theme);
@@ -657,65 +659,6 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return fChooser;
 	}
 
-	public void createFileWindow(int saveing, String defaultPath, String title) {
-		tmp = getFrameImage();
-		// ImageFileFilter filter = new ImageFileFilter();
-		fileChooser = createFileChooser(defaultPath, saveing);
-		fileChooser.addActionListener(this);
-		fileDialog = createDialog(fileChooser, title, this);
-		fileDialog.setVisible(true);
-	}
-
-	public String getCacheDir() {
-		return signlink.findcachedir();
-	}
-
-	public BufferedImage getFrameImage() {
-		BufferedImage image;
-		try {
-			Robot robot = new Robot();
-			Point point = getLocationOnScreen();
-			Rectangle rectangle = new Rectangle(point.x, point.y, getWidth(),
-					getHeight());
-			image = robot.createScreenCapture(rectangle);
-		} catch (Throwable throwable) {
-			JOptionPane.showMessageDialog(frame,
-					"An error occured while trying to create a screenshot!",
-					"Screenshot Error", 0);
-			return null;
-		}
-		return image;
-	}
-
-	@Override
-	public void launchURL(String s) {
-		String s1 = System.getProperty("os.name");
-		try {
-			if (s1.startsWith("Windows")) {
-				Runtime.getRuntime()
-						.exec((new StringBuilder())
-								.append("rundll32 url.dll,FileProtocolHandler ")
-								.append(s).toString());
-			} else {
-				String as[] = { "firefox", "opera", "konqueror", "epiphany",
-						"mozilla", "netscape" };
-				String s2 = null;
-				for (int i = 0; i < as.length && s2 == null; i++) {
-					if (Runtime.getRuntime()
-							.exec(new String[] { "which", as[i] }).waitFor() == 0) {
-						s2 = as[i];
-					}
-				}
-				if (s2 == null) {
-					throw new Exception("Could not find web browser");
-				}
-				Runtime.getRuntime().exec(new String[] { s2, s });
-			}
-		} catch (Exception exception) {
-			System.out.println("An error occured while trying to open the web browser!\n");
-		}
-	}
-
 	public void musicPlayer(String cmd, String fileDir, String songName) {
 		// String fileDir = FileDIR;// signlink.findcachedir() +"Mp3/Music/";
 		if (player != null && player.isRunning()) {
@@ -816,8 +759,7 @@ public class Gui extends Client implements ActionListener, MouseListener,
 	}
 
 	@SuppressWarnings("static-access")
-	public void recreateGUIFrame(boolean undecorative, int width, int height,
-			boolean resizable, int displayMode) {
+	public void recreateGUIFrame(boolean undecorative, int width, int height, boolean resizable, int displayMode) {
 		System.out.println("displayMode: " + displayMode);
 		main3DAreaWidth = instance.getScreenWidth();
 		main3DAreaHeight = instance.getScreenHeight();
@@ -856,66 +798,6 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
-	public void showSplash() {
-		System.out.println("GUI.showSplash called");
-		try {
-			splashPanel = (JPanel) frame.getContentPane();
-
-			Image img = new ImageIcon(fileName).getImage();
-
-			int width = img.getWidth(null);
-			int height = img.getHeight(null);
-			Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-			int x = (screen.width - width) / 2;
-			int y = (screen.height - height) / 2;
-
-			frame.setBounds(x, y, width, height);
-			JLabel label = new JLabel(new ImageIcon(fileName));
-			splashPanel.setOpaque(false);
-			label.setOpaque(false);
-			splashPanel.add(label, BorderLayout.CENTER);
-			frame.setVisible(true);
-			/**
-			 * Sleep can be replaced with various loadings.
-			 */
-			try {
-				Thread.sleep(splashDuration);
-			} catch (Exception e) {
-
-			}
-			frame.setVisible(false);
-		} catch (NullPointerException nE) {
-			System.out.println("[FAILED] Couldn't find the splash image");
-		} catch (Exception e) {
-
-		}
-	}
-
-	public void takeScreenshot(String directory) {
-		try {
-			(new File(directory)).mkdir();
-			Thread.sleep(1000L);
-			Window window = KeyboardFocusManager
-					.getCurrentKeyboardFocusManager().getFocusedWindow();
-			Point point = window.getLocationOnScreen();
-			int i = (int) point.getX();
-			int j = (int) point.getY();
-			int k = window.getWidth();
-			int l = window.getHeight();
-			Robot robot = new Robot(window.getGraphicsConfiguration()
-					.getDevice());
-			Rectangle rectangle = new Rectangle(i, j, k, l);
-			java.awt.image.BufferedImage bufferedimage = robot
-					.createScreenCapture(rectangle);
-			int i1 = (int) (Math.random() * 100);
-			File file = new File((new StringBuilder()).append(directory + "/")
-					.append(i1).append(".png").toString());
-			ImageIO.write(bufferedimage, "png", file);
-		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
-		}
-	}
-	
 	protected static ImageIcon createImageIcon(String path) {
 		try {
 			// URL imgURL = Gui.class.getResource(path);
@@ -932,6 +814,52 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return null;
 	}
 
+	public void createFileWindow(int saveing, String defaultPath, String title) {
+		tmp = getFrameImage();
+		// ImageFileFilter filter = new ImageFileFilter();
+		fileChooser = createFileChooser(defaultPath, saveing);
+		fileChooser.addActionListener(this);
+		fileDialog = createDialog(fileChooser, title, this);
+		fileDialog.setVisible(true);
+	}
+
+	public BufferedImage getFrameImage() {
+		BufferedImage image;
+		try {
+			Robot robot = new Robot();
+			Point point = getLocationOnScreen();
+			Rectangle rectangle = new Rectangle(point.x, point.y, getWidth(), getHeight());
+			image = robot.createScreenCapture(rectangle);
+		} catch (Throwable throwable) {
+			JOptionPane.showMessageDialog(frame,
+					"An error occured while trying to create a screenshot!",
+					"Screenshot Error", 0);
+			return null;
+		}
+		return image;
+	}
+
+//	public void takeScreenshot(String directory) {	//Wasn't even used anymore 4/17/17
+//		try {
+//			(new File(directory)).mkdir();
+//			Thread.sleep(1000L);
+//			Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+//			Point point = window.getLocationOnScreen();
+//			int i = (int) point.getX();
+//			int j = (int) point.getY();
+//			int k = window.getWidth();
+//			int l = window.getHeight();
+//			Robot robot = new Robot(window.getGraphicsConfiguration().getDevice());
+//			Rectangle rectangle = new Rectangle(i, j, k, l);
+//			java.awt.image.BufferedImage bufferedimage = robot.createScreenCapture(rectangle);
+//			int i1 = (int) (Math.random() * 100);
+//			File file = new File(directory + "/" + i1 + ".png");
+//			ImageIO.write(bufferedimage, "png", file);
+//		} catch (Exception exception) {
+//			System.out.println(exception.getMessage());
+//		}
+//	}
+	
 	public static String getNearestScreenshotFilename(String directory) throws IOException {
 		File file = new File(directory);
 		int i = 0;
@@ -955,20 +883,6 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return null;
 	}
 
-	/*
-	 * public void recreateGUIFrame(boolean undecorative, int width, int height,
-	 * boolean resizable, int displayMode) { main3DAreaWidth = (displayMode ==
-	 * 1) ? 512 : instance.getScreenWidth(); main3DAreaHeight = (displayMode ==
-	 * 1) ? 334 : instance.getScreenHeight(); super.load3DArea();
-	 * instance.recreateClientFrame(undecorative,width,height,resizable);
-	 * System.out.println("displayMode: " + displayMode);
-	 * 
-	 * main3DArea = new RSImageProducer(main3DAreaWidth, main3DAreaHeight,
-	 * getGameComponent());
-	 * 
-	 * super.mouseX = super.mouseY = -1; }
-	 */
-
 	public void WorldSelect() {
 		try {
 			String s1 = JOptionPane.showInputDialog(this,
@@ -988,6 +902,84 @@ public class Gui extends Client implements ActionListener, MouseListener,
 					.toString());
 		}
 	}
+
+//	@Override
+//	public void launchURL(String s) {	//Not sure if this is even needed there is the same thing in Client Class 4/17/17
+//		String s1 = System.getProperty("os.name");
+//		try {
+//			if (s1.startsWith("Windows")) {
+//				Runtime.getRuntime()
+//						.exec((new StringBuilder())
+//								.append("rundll32 url.dll,FileProtocolHandler ")
+//								.append(s).toString());
+//			} else {
+//				String as[] = { "firefox", "opera", "konqueror", "epiphany",
+//						"mozilla", "netscape" };
+//				String s2 = null;
+//				for (int i = 0; i < as.length && s2 == null; i++) {
+//					if (Runtime.getRuntime()
+//							.exec(new String[] { "which", as[i] }).waitFor() == 0) {
+//						s2 = as[i];
+//					}
+//				}
+//				if (s2 == null) {
+//					throw new Exception("Could not find web browser");
+//				}
+//				Runtime.getRuntime().exec(new String[] { s2, s });
+//			}
+//		} catch (Exception exception) {
+//			System.out.println("An error occured while trying to open the web browser!\n");
+//		}
+//	}
+
+//	public void showSplash() {	//Not used just using the built in java splash display 4/17/17
+//		System.out.println("GUI.showSplash called");
+//		try {
+//			splashPanel = (JPanel) frame.getContentPane();
+//
+//			Image img = new ImageIcon(fileName).getImage();
+//
+//			int width = img.getWidth(null);
+//			int height = img.getHeight(null);
+//			Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+//			int x = (screen.width - width) / 2;
+//			int y = (screen.height - height) / 2;
+//
+//			frame.setBounds(x, y, width, height);
+//			JLabel label = new JLabel(new ImageIcon(fileName));
+//			splashPanel.setOpaque(false);
+//			label.setOpaque(false);
+//			splashPanel.add(label, BorderLayout.CENTER);
+//			frame.setVisible(true);
+//			/**
+//			 * Sleep can be replaced with various loadings.
+//			 */
+//			try {
+//				Thread.sleep(splashDuration);
+//			} catch (Exception e) {
+//
+//			}
+//			frame.setVisible(false);
+//		} catch (NullPointerException nE) {
+//			System.out.println("[FAILED] Couldn't find the splash image");
+//		} catch (Exception e) {
+//
+//		}
+//	}
+
+	/*
+	 * public void recreateGUIFrame(boolean undecorative, int width, int height,
+	 * boolean resizable, int displayMode) { main3DAreaWidth = (displayMode ==
+	 * 1) ? 512 : instance.getScreenWidth(); main3DAreaHeight = (displayMode ==
+	 * 1) ? 334 : instance.getScreenHeight(); super.load3DArea();
+	 * instance.recreateClientFrame(undecorative,width,height,resizable);
+	 * System.out.println("displayMode: " + displayMode);
+	 * 
+	 * main3DArea = new RSImageProducer(main3DAreaWidth, main3DAreaHeight,
+	 * getGameComponent());
+	 * 
+	 * super.mouseX = super.mouseY = -1; }
+	 */
 
 	/*
 	 * public void recreateClientFrame(boolean decorative, int width, int
