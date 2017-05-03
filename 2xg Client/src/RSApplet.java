@@ -225,8 +225,7 @@ public class RSApplet extends Applet implements Runnable, MouseListener,
 		myWidth = Width;
 		myHeight = Height;
 		graphics = getGameComponent().getGraphics();
-		fullGameScreen = new RSImageProducer(myWidth, myHeight,
-				getGameComponent());
+		fullGameScreen = new RSImageProducer(myWidth, myHeight, getGameComponent());
 		startRunnable(this, 1);
 	}
 

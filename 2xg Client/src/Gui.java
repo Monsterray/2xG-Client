@@ -175,9 +175,8 @@ public class Gui extends Client implements ActionListener, MouseListener,
 				topMenuBar = new JMenuBar();
 				topMenuBar = addMenuBar(topMenuBar);
 				frame.getContentPane().add(topMenuBar, BorderLayout.NORTH);
-
 			}
-			frame.getContentPane().add(gamePanel, BorderLayout.CENTER);
+			
 			if (drawTabs) {
 				frame.getContentPane().add(tab, BorderLayout.CENTER);
 				tab.addTab("Game", gameIcon, gamePanel, "Your Game Panel");
@@ -191,6 +190,8 @@ public class Gui extends Client implements ActionListener, MouseListener,
 				// tab.addTab("Aboutscroll", lice, Aboutscroll, "Aboutscroll");
 				// tab.addTab("Licencescroll", lice, Licencescroll,
 				// "Licencescroll");
+			}else{
+				frame.getContentPane().add(gamePanel, BorderLayout.CENTER);
 			}
 
 			frame.setVisible(true);
@@ -220,13 +221,8 @@ public class Gui extends Client implements ActionListener, MouseListener,
 	private ImageIcon gameIcon = createImageIcon("images/command.gif");
 
 	private ImageIcon aboutIcon = createImageIcon("images/about.png");
-	// private ImageIcon info = createImageIcon("images/pfi.png");
-	// private ImageIcon lice = createImageIcon("images/licence.png");
 	private JMenuBar topMenuBar;
-//	private JPanel splashPanel;	// Because not useing splash method this is useless 4/17/17
 	private JPanel gamePanel;
-	// private JTextArea aboutArea = new JTextArea();
-	// private JTextArea licenceArea = new JTextArea();
 	private JTextArea textArea = new JTextArea();
 	private MP3Player player;
 	public int midiCount;
@@ -235,25 +231,18 @@ public class Gui extends Client implements ActionListener, MouseListener,
 	boolean drawToolbar;
 	public String frameTitle = "2xG V3.4 || By Monsterray";
 	public static String frameSTitle = "2xG V3.4 || By Monsterray";
-//	public String fileName = "splash.png";	// Because not useing splash method this is useless 4/17/17
-//	private int splashDuration = 5000;	// Because not useing splash method this is useless 4/17/17
 	private Dimension appletDimensions = new Dimension(765, 503);
 	public Dimension screenSize;
 	public int screenWidth;
 	public int screenHeight;
 	private static boolean isApplet = false;
-	// public int theme;
 	protected JScrollPane scrollPane;
 
-	// private JTabbedPane jTabbedPane1;
 	public JFrame frame;
 	public Toolkit toolkit;
 	public Gui instance;
 	public int myWidth;
 	public int myHeight;
-	// private Graphics graphics;
-	// private BufferedImage frameImage;
-	private BufferedImage tmp;
 
 	private JFileChooser fileChooser;
 
@@ -261,6 +250,7 @@ public class Gui extends Client implements ActionListener, MouseListener,
 
 	private int dialogSelectionType;
 	private Utilitys utils = new Utilitys();
+	private BufferedImage tmp;
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
@@ -313,75 +303,6 @@ public class Gui extends Client implements ActionListener, MouseListener,
 					System.out.println("World Map is loading...");
 					break;
 	
-//				case "Blue":
-//					try {
-//						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceBusinessBlueSteelLookAndFeel");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-//	
-//				case "Black":
-//					try {
-//						UIManager.setLookAndFeel("theme.blackTheme");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-//	
-//				case "Red":
-//					try {
-//						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceMagmaLookAndFeel");
-//						// UIManager.setLookAndFeel("theme.RedTheme");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-//	
-//				case "Green":
-//					initLookAndFeel();
-////					try {
-//////						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceEmeraldDuskLookAndFeel");
-////						UIManager.setLookAndFeel("theme.GreenTheme");
-////					} catch (Exception e) {
-////						e.printStackTrace();
-////					}
-//					break;
-//	
-//				case "White":
-//					try {
-//						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceCremeLookAndFeel");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-//	
-//				case "Grey":
-//					try {
-//						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceMistAquaLookAndFeel");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-//	
-//				case "Dark Grey":
-//					try {
-//						UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceRavenGraphiteGlassLookAndFeel");
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//					break;
-				
-				case "White":
-				case "Grey":
-				case "Dark Grey":
-				case "Black":
-				case "Red":
-				case "Green":
-				case "Blue":
-					changeTheme(cmd);
-					break;
-	
 				case "Object IDs":
 					if (isApplet) {
 						// checkIDs();
@@ -389,11 +310,6 @@ public class Gui extends Client implements ActionListener, MouseListener,
 					} else {
 						new Xml$("all_IDs/Objects.xml");
 					}
-					break;
-	
-				case "Save Screenshot":
-				case "Screenshot":
-					createFileWindow(1, "../", "Save Screenshot");
 					break;
 	
 				case "Debug":
@@ -424,18 +340,20 @@ public class Gui extends Client implements ActionListener, MouseListener,
 				case "change server":
 					WorldSelect();
 					break;
+
+				case "Save Screenshot":
+				case "Screenshot":
+					tmp = getFrameImage(frame);
+					createFileWindow(1, "../", "Save Screenshot");
+					break;
 	
 				case "ApproveSelection":
 					File file = fileChooser.getSelectedFile();
 					if (dialogSelectionType == 1) {
 						if (file != null && file.isFile()) {
 							int i = JOptionPane.showConfirmDialog(
-									frame,
-									(new StringBuilder())
-											.append(file.getAbsolutePath())
-											.append(" already exists.\n"
-													+ "Do you want to replace it?")
-											.toString(), "Save Screenshot", 2);
+									frame, file.getAbsolutePath() + " already exists.\n" + "Do you want to replace it?", 
+									"Save Screenshot", 2);
 							if (i != 0) {
 								return;
 							}
@@ -586,6 +504,10 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		frame.setLocation((screenWidth - (int) appletDimensions.getWidth()) / 2, (screenHeight - (int) appletDimensions.getHeight()) / 2);
 	}
 
+	/**
+	 * @param menuBar
+	 * @return
+	 */
 	private JMenuBar addMenuBar(JMenuBar menuBar) {
 		menuBar.add(createButtonTab("File", new String[] { "Open File",
 				"Save Screenshot", "-", "Vote", "Donate", "Forums", "-",
@@ -604,6 +526,11 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return menuBar;
 	}
 
+	/**
+	 * @param buttonName
+	 * @param buttonCommandName
+	 * @return
+	 */
 	public JButton createButton(String buttonName, String buttonCommandName) {
 		JButton button = new JButton(buttonName);
 		button.setActionCommand(buttonCommandName);
@@ -611,6 +538,11 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return button;
 	}
 
+	/**
+	 * @param tabName
+	 * @param subTabNames
+	 * @return
+	 */
 	public JMenu createButtonTab(String tabName, String[] subTabNames) {
 		JMenu Menu;
 		try {
@@ -631,6 +563,12 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return null;
 	}
 
+	/**
+	 * @param comp
+	 * @param title
+	 * @param container
+	 * @return
+	 */
 	public JDialog createDialog(Component comp, String title, Container container) {
 		JDialog jdialog = new JDialog(frame, title, true);
 		jdialog.setDefaultCloseOperation(2);
@@ -640,25 +578,11 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return jdialog;
 	}
 
-	public JFileChooser createFileChooser(String defaultPath, int dialogType) {
-		JFileChooser fChooser;
-		try {
-			fChooser = new JFileChooser(); // creates a JFileChooser
-			fChooser.setFileSelectionMode(0); // either files(0) or folders(1)
-			fChooser.addChoosableFileFilter(new ImageFileFilter()); // sets the filter in the drop down menu bar for extension types
-			fChooser.setCurrentDirectory(new File(defaultPath)); // sets the directory the chooser begins in
-			String title = ((int) (Math.random() * 100)) + ".png"; // gets a random name for the file, will change this later
-			fChooser.setSelectedFile(new File(title)); // sets the
-			fChooser.setDialogType(dialogType); // either opening(0) or saveing(1)
-			dialogSelectionType = dialogType; // sets my variable to tell if the user is loading or saveing
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("[Failed] to create FileChooser");
-			return null;
-		}
-		return fChooser;
-	}
-
+	/**
+	 * @param cmd
+	 * @param fileDir
+	 * @param songName
+	 */
 	public void musicPlayer(String cmd, String fileDir, String songName) {
 		// String fileDir = FileDIR;// signlink.findcachedir() +"Mp3/Music/";
 		if (player != null && player.isRunning()) {
@@ -738,6 +662,11 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+	/**
+	 * @param path
+	 * @param jta
+	 * @return
+	 */
 	public JTextArea readTabInfo(String path, JTextArea jta) {
 		BufferedReader objectFile = null;
 		try {
@@ -758,6 +687,13 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+	/**
+	 * @param undecorative
+	 * @param width
+	 * @param height
+	 * @param resizable
+	 * @param displayMode
+	 */
 	@SuppressWarnings("static-access")
 	public void recreateGUIFrame(boolean undecorative, int width, int height, boolean resizable, int displayMode) {
 		System.out.println("displayMode: " + displayMode);
@@ -772,6 +708,9 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		super.mouseX = super.mouseY = -1;
 	}
 
+	/**
+	 * @param path
+	 */
 	public void setCornerIcon(String path) {
 		try {
 			if ((new File(path)).isFile()) {
@@ -785,6 +724,10 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+	/**
+	 * @param path
+	 * @param name
+	 */
 	public void setCursor(String path, String name) {
 		try {
 			toolkit = Toolkit.getDefaultToolkit();
@@ -798,6 +741,10 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+	/**
+	 * @param path
+	 * @return
+	 */
 	protected static ImageIcon createImageIcon(String path) {
 		try {
 			// URL imgURL = Gui.class.getResource(path);
@@ -814,8 +761,37 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return null;
 	}
 
+	/**
+	 * @param defaultPath
+	 * @param dialogType
+	 * @return
+	 */
+	public JFileChooser createFileChooser(String defaultPath, int dialogType) {
+		JFileChooser fChooser;
+		try {
+			fChooser = new JFileChooser(); // creates a JFileChooser
+			fChooser.setFileSelectionMode(0); // either files(0) or folders(1)
+			fChooser.addChoosableFileFilter(new ImageFileFilter()); // sets the filter in the drop down menu bar for extension types
+			fChooser.setCurrentDirectory(new File(defaultPath)); // sets the directory the chooser begins in
+			String title = ((int) (Math.random() * 100)) + ".png"; // gets a random name for the file, will change this later
+			fChooser.setSelectedFile(new File(title)); // sets the
+			fChooser.setDialogType(dialogType); // either opening(0) or saveing(1)
+			dialogSelectionType = dialogType; // sets my variable to tell if the user is loading or saveing
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("[Failed] to create FileChooser");
+			return null;
+		}
+		return fChooser;
+	}
+
+	/**
+	 * @param saveing
+	 * @param defaultPath
+	 * @param title
+	 * @return
+	 */
 	public void createFileWindow(int saveing, String defaultPath, String title) {
-		tmp = getFrameImage();
 		// ImageFileFilter filter = new ImageFileFilter();
 		fileChooser = createFileChooser(defaultPath, saveing);
 		fileChooser.addActionListener(this);
@@ -823,12 +799,17 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		fileDialog.setVisible(true);
 	}
 
-	public BufferedImage getFrameImage() {
+
+	/**
+	 * @param screenToCapture
+	 * @return
+	 */
+	public BufferedImage getFrameImage(Component screenToCapture) {
 		BufferedImage image;
 		try {
 			Robot robot = new Robot();
-			Point point = getLocationOnScreen();
-			Rectangle rectangle = new Rectangle(point.x, point.y, getWidth(), getHeight());
+			Point point = screenToCapture.getLocationOnScreen();
+			Rectangle rectangle = new Rectangle(point.x, point.y, screenToCapture.getWidth(), screenToCapture.getHeight());
 			image = robot.createScreenCapture(rectangle);
 		} catch (Throwable throwable) {
 			JOptionPane.showMessageDialog(frame,
@@ -839,50 +820,9 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		return image;
 	}
 
-//	public void takeScreenshot(String directory) {	//Wasn't even used anymore 4/17/17
-//		try {
-//			(new File(directory)).mkdir();
-//			Thread.sleep(1000L);
-//			Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-//			Point point = window.getLocationOnScreen();
-//			int i = (int) point.getX();
-//			int j = (int) point.getY();
-//			int k = window.getWidth();
-//			int l = window.getHeight();
-//			Robot robot = new Robot(window.getGraphicsConfiguration().getDevice());
-//			Rectangle rectangle = new Rectangle(i, j, k, l);
-//			java.awt.image.BufferedImage bufferedimage = robot.createScreenCapture(rectangle);
-//			int i1 = (int) (Math.random() * 100);
-//			File file = new File(directory + "/" + i1 + ".png");
-//			ImageIO.write(bufferedimage, "png", file);
-//		} catch (Exception exception) {
-//			System.out.println(exception.getMessage());
-//		}
-//	}
-	
-	public static String getNearestScreenshotFilename(String directory) throws IOException {
-		File file = new File(directory);
-		int i = 0;
-		do {
-			String s = " .png";
-			if (i < 10) {
-				s = s.replaceFirst(" ", " 000"+ i);
-			} else if (i < 100) {
-				s = s.replaceFirst(" "," 00"+ i);
-			} else if (i < 1000) {
-				s = s.replaceFirst(" ", " 0"+ i);
-			} else if (i < 10000) {
-				s = s.replaceFirst(" ", " "+ i);
-			}
-			if ((new File(file, s)).isFile()) {
-				i++;
-			} else {
-				return s;
-			}
-		} while (i < 10000);
-		return null;
-	}
-
+	/**
+	 * 
+	 */
 	public void WorldSelect() {
 		try {
 			String s1 = JOptionPane.showInputDialog(this,
@@ -903,6 +843,55 @@ public class Gui extends Client implements ActionListener, MouseListener,
 		}
 	}
 
+//	/**
+//	 * @param directory
+//	 * @return
+//	 * @throws IOException
+//	 */
+//	public static String getNearestScreenshotFilename(String directory) throws IOException {
+//		File file = new File(directory);
+//		int i = 0;
+//		do {
+//			String s = " .png";
+//			if (i < 10) {
+//				s = s.replaceFirst(" ", " 000"+ i);
+//			} else if (i < 100) {
+//				s = s.replaceFirst(" "," 00"+ i);
+//			} else if (i < 1000) {
+//				s = s.replaceFirst(" ", " 0"+ i);
+//			} else if (i < 10000) {
+//				s = s.replaceFirst(" ", " "+ i);
+//			}
+//			if ((new File(file, s)).isFile()) {
+//				i++;
+//			} else {
+//				return s;
+//			}
+//		} while (i < 10000);
+//		return null;
+//	}
+//
+//	public void takeScreenshot(String directory) {	//Wasn't even used anymore 4/17/17
+//		try {
+//			(new File(directory)).mkdir();
+//			Thread.sleep(1000L);
+//			Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+//			Point point = window.getLocationOnScreen();
+//			int i = (int) point.getX();
+//			int j = (int) point.getY();
+//			int k = window.getWidth();
+//			int l = window.getHeight();
+//			Robot robot = new Robot(window.getGraphicsConfiguration().getDevice());
+//			Rectangle rectangle = new Rectangle(i, j, k, l);
+//			java.awt.image.BufferedImage bufferedimage = robot.createScreenCapture(rectangle);
+//			int i1 = (int) (Math.random() * 100);
+//			File file = new File(directory + "/" + i1 + ".png");
+//			ImageIO.write(bufferedimage, "png", file);
+//		} catch (Exception exception) {
+//			System.out.println(exception.getMessage());
+//		}
+//	}
+//	
 //	@Override
 //	public void launchURL(String s) {	//Not sure if this is even needed there is the same thing in Client Class 4/17/17
 //		String s1 = System.getProperty("os.name");
